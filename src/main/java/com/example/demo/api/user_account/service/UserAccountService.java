@@ -13,23 +13,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void signup(UserAccountRequest userAccountRequest) {
         //password 인코딩을 통해 보안을 높인다.
-        String password = passwordEncoder.encode(userAccountRequest.getPassword());
+//        String password = passwordEncoder.encode(userAccountRequest.getPassword());
 
         //존재하는 이메일인지 확인
         //존재한다면 exception을 일으킨다.
-
-
 
         //builder 패턴을 통해 가독성을 높인다.
         UserAccount user = UserAccount.builder()
                 .userName(userAccountRequest.getUserName())
                 .userEmail(userAccountRequest.getPassword())
-                .password(password)
+                .password(userAccountRequest.getPassword())
                 .build();
 
         userAccountRepository.save(user);

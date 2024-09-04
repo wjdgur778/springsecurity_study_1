@@ -23,10 +23,11 @@ public class UserAccountController {
         return  ResponseEntity.status(200).body(
                 Result.builder()
                         .message("회원가입 성공")
-                        .data()
+                        .data(true)
                         .build()
         );
     }
+
 
     @PostMapping("login")
     public ResponseEntity<Result> login(){
@@ -34,7 +35,7 @@ public class UserAccountController {
         return ResponseEntity.status(200).body(
                 Result.builder()
                         .message("로그인 성공")
-                        .data()
+                        .data(true)
                         .build()
         );
     }

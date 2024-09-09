@@ -37,7 +37,6 @@ public class SecurityConfig {
     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
 /*
     csrf를 disable하기 위해 아래 코드를 구현해야 하지만
 
@@ -54,20 +53,18 @@ public class SecurityConfig {
 
  */
 
-                        // 토큰 기반의 인증을 거치기 때문에 csrf의 보호가 필요하지 않다.
-                .csrf(customizer -> customizer.disable())
-                        //(tomcat구동 오류) 세션 난수 문제 해결
-                        // 토큰 기반 인증이므로 세션 사용 하지않음
-                .sessionManagement((sessionManagement) ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                .authorizeHttpRequests(
-                        authorize -> authorize
-                                //requsetMatchers를 사용할때는 url를 정확하게 작성해야한다.
-                                .requestMatchers("/api/v1/user/signup").permitAll()
-                                .anyRequest().hasRole(Role.USER.name())//위에서 언급한 url 이외의 url은 모두 허용한다.
-                );
+        // 토큰 기반의 인증을 거치기 때문에 csrf의 보호가 필요하지 않다.
+        http.csrf(customizer -> customizer.disable());
+        //(tomcat구동 오류) 세션 난수 문제 해결
+        // 토큰 기반 인증이므로 세션 사용 하지않음
+        http.sessionManagement((sessionManagement) ->
+                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.authorizeHttpRequests(
+                authorize -> authorize
+                        //requsetMatchers를 사용할때는 url를 정확하게 작성해야한다.
+                        .requestMatchers("/api/v1/user/signup").permitAll()
+                        .anyRequest().hasRole(Role.USER.name())//위에서 언급한 url 이외의 url은 모두 허용한다.
+        );
 
         // 기본 HTTP 인증을 활성화하여 사용자 인증을 처리하겠다는 설정
 //                        .httpBasic(Customizer.withDefaults());

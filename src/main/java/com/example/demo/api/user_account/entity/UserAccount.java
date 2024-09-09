@@ -1,25 +1,33 @@
 package com.example.demo.api.user_account.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
+@NoArgsConstructor
 public class UserAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long userId;
+    private long id;
 
-    String userEmail;
-    String password;
-    String userName;
+    private String email;
+    private String password;
+    private String name;
 
+    @Enumerated(EnumType.STRING)
+    private Role userRole;
+
+    @Builder
+    public UserAccount(String email, String password, String name, Role userRole) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.userRole = userRole;
+    }
 }

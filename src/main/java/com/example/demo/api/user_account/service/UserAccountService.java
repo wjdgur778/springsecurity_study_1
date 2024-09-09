@@ -25,10 +25,10 @@ public class UserAccountService {
 
         //builder 패턴을 통해 가독성을 높인다.
         UserAccount user = UserAccount.builder()
-                .userName(userAccountRequest.getUserName())
-                .userEmail(userAccountRequest.getPassword())
-                .password(userAccountRequest.getPassword())
-                .build();
+                        .email(userAccountRequest.getUserEmail())
+                        .password(userAccountRequest.getPassword())
+                        .name(userAccountRequest.getUserName())
+                        .build();
 
         userAccountRepository.save(user);
     }

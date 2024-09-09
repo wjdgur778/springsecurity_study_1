@@ -5,18 +5,18 @@ import com.example.demo.api.user_account.dto.UserAccountRequest;
 import com.example.demo.api.user_account.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserAccountController {
     private final UserAccountService userAccountService;
 
-    @PostMapping("signup")
-    public ResponseEntity<Result> signup(UserAccountRequest userAccountRequest){
+    //회원가입은 성공했지만 그 이후에 403이 리턴되었다.
+    //
+    @PostMapping("/signup")
+    public ResponseEntity<Result> signup(@RequestBody UserAccountRequest userAccountRequest){
 
         userAccountService.signup(userAccountRequest);
 
@@ -28,7 +28,6 @@ public class UserAccountController {
         );
     }
 
-
     @PostMapping("login")
     public ResponseEntity<Result> login(){
 
@@ -36,6 +35,18 @@ public class UserAccountController {
                 Result.builder()
                         .message("로그인 성공")
                         .data(true)
+                        .build()
+        );
+    }
+    //일반 사용자만 이용 가능
+    //ROLE_USER만 이용 가능
+    //
+    @GetMapping("list")
+    public ResponseEntity<Result> list(){
+        return ResponseEntity.status(200).body(
+                Result.builder()
+                        .message("message")
+                        .data(null)
                         .build()
         );
     }

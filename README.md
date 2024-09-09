@@ -1,8 +1,7 @@
 # springsecurity_study_
-## 🔥이 글의 목적은 직접 다시 코드를 작성해보면서 springsecurity를 보다 더 이해하기위함이다.
+### 🔥이 글의 목적은 직접 다시 코드를 작성해보면서 springsecurity를 보다 더 이해하기위함이다.
 
----
-SpringSecurity, JWT
+공부 기술 : SpringSecurity, JWT
 
 ### 시나리오
 1. 사용자는 이메일, 이름, 패스워드를 입력하여 회원가입을 할 수 있다.

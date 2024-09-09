@@ -1,6 +1,7 @@
 package com.example.demo.api.user_account.service;
 
 import com.example.demo.api.user_account.dto.UserAccountRequest;
+import com.example.demo.api.user_account.dto.UserAccountResponse;
 import com.example.demo.api.user_account.entity.Role;
 import com.example.demo.api.user_account.entity.UserAccount;
 import com.example.demo.api.user_account.repository.UserAccountRepository;
@@ -9,6 +10,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,13 @@ public class UserAccountService {
                         .build();
 
         userAccountRepository.save(user);
+    }
+
+    @Transactional
+    public List<UserAccountResponse> show(){
+        return userAccountRepository.findAll().stream().map(
+                userAccount -> new UserAccountResponse(userAccount)
+        ).collect(Collectors.toList());
     }
 
 }

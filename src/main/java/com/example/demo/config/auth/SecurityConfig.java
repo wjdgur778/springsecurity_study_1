@@ -38,19 +38,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 /*
-    csrf를 disable하기 위해 아래 코드를 구현해야 하지만
+    코드를 간단하게 구현할 수 있는 이유는
+    Customizer<T> 인터페이스는 @FunctionalInterface 어노테이션이 붙어
+    Lamda를 사용하여 단순하게 " .csrf(customizer -> customizer.disable()) "과 같이 구현가능하다.
 
+    원래는 아래와 같은 코드로 구현되어 있다.
     Customizer<CsrfConfigurer<HttpSecurity>> ct = new Customizer<CsrfConfigurer<HttpSecurity>>() {
         @Override
         public void customize(CsrfConfigurer<HttpSecurity> httpSecurityCsrfConfigurer) {
             httpSecurityCsrfConfigurer.disable();
         }
     }
-    Customizer<T> 인터페이스는 @FunctionalInterface 어노테이션이 붙어
-    Lamda를 사용하여 단순하게 " .csrf(customizer -> customizer.disable()) "과 같이 구현가능하다.
-
     이외의 아래 코드들도 마찬가지의 코드들이 숨어있다.
-
  */
 
         // 토큰 기반의 인증을 거치기 때문에 csrf의 보호가 필요하지 않다.
@@ -85,14 +84,6 @@ public class SecurityConfig {
 
     @Bean
     AuthenticationProvider authenticationProvider() {
-        System.out.println();
-        System.out.println();
-
-
-        System.out.println("AuthenticationProvider");
-        System.out.println();
-        System.out.println();
-
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         provider.setUserDetailsService(customUserDetailService);

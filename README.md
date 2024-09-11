@@ -31,10 +31,10 @@
 
 #### 인증과정 II (JWT 포함한 과정)
 1. 사용자의 요청을 SecurityFilterChain 에 등록된 JwtFilter 가 가로채 요청 헤더의 jwt 를 확인한다. 이때 JwtFilter 는 모든 HTTP 요청에 대해 실행되며, 요청이 인증을 요구하는지 여부와 상관없이 JWT 검증 작업을 수행한다.
-    2. **유효한 JWT** 
-       * ```SecurityContextHolder.getContext().setAuthentication(authToken)``` 를 통해 SecurityContextHolder 에 인증 정보를 설정하여 이후의 요청 처리가 인증된 사용자로서 진행.
-    3. **JWT가 없거나 유효하지 않음** 
-       * ```인증과정 I```를 거치고 인증에 성공하면 jwt를 발급받는다.  
+   1. **유효한 JWT** 
+      * ```SecurityContextHolder.getContext().setAuthentication(authToken)``` 를 통해 SecurityContextHolder 에 인증 정보를 설정하여 이후의 요청 처리가 인증된 사용자로서 진행.
+   2. **JWT가 없거나 유효하지 않음**
+      * ```인증과정 I```를 거치고 인증에 성공하면 jwt를 발급받는다.  
        
 #### 주의한 점
 * 생략되는 과정을 최대한 생각하고 구현 

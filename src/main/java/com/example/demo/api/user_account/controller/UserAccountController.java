@@ -1,11 +1,13 @@
 package com.example.demo.api.user_account.controller;
 
 import com.example.demo.api.common.Result;
+import com.example.demo.api.user_account.dto.LoginRequest;
 import com.example.demo.api.user_account.dto.UserAccountRequest;
 import com.example.demo.api.user_account.dto.UserAccountResponse;
 import com.example.demo.api.user_account.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,24 +26,22 @@ public class UserAccountController {
     // Result에 @Data 어노테이션을 추가
     @PostMapping("/signup")
     public ResponseEntity<Result> signup(@RequestBody UserAccountRequest userAccountRequest){
-
-        userAccountService.signup(userAccountRequest);
-
         return  ResponseEntity.status(200).body(
                 Result.builder()
                         .message("회원가입 성공")
-                        .data(true)
+                        .data(userAccountService.signup(userAccountRequest))
                         .build()
         );
     }
 
+    //로그인 시에 jwt 토큰을 발급해주어야 한다.
     @PostMapping("login")
-    public ResponseEntity<Result> login(){
+    public ResponseEntity<Result> login(@RequestBody LoginRequest loginRequest){
 
         return ResponseEntity.status(200).body(
                 Result.builder()
                         .message("로그인 성공")
-                        .data(true)
+                        .data(userAccountService.login(loginRequest))
                         .build()
         );
     }

@@ -1,21 +1,19 @@
 package com.example.demo.config.auth;
 
 import com.example.demo.api.user_account.entity.Role;
+import com.example.demo.config.auth.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +26,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    private final JwtFilter jwtFilter;
     private final CustomUserDetailService customUserDetailService;
 
     /*
@@ -72,22 +71,21 @@ public class SecurityConfig {
 //                        .formLogin(Customizer.withDefaults())
 
         //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-//                        .addFilter(null)
-
-
+        //JWT 인증을 사용하는 경우, JwtFilter가 사용자 인증을 처리하므로 UsernamePasswordAuthenticationFilter를 거칠 필요가 없습니다.
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
 
-    //인증인 필요한 객체가 provider를 통해 인증된 객체로 변환 return 된다.
-    //AuthenticationProvider가 Filterchain에 앞서 호출되어 provider를 세팅한다.
+    // only security
+    // 인증인 필요한 객체가 provider를 통해 인증된 객체로 변환 return 된다.
+    // AuthenticationProvider가 Filterchain에 앞서 호출되어 provider를 세팅한다.
 
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         provider.setUserDetailsService(customUserDetailService);
-
         return provider;
     }
 

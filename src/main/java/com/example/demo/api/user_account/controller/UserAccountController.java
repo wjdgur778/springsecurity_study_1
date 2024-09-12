@@ -4,6 +4,7 @@ import com.example.demo.api.common.Result;
 import com.example.demo.api.user_account.dto.LoginRequest;
 import com.example.demo.api.user_account.dto.UserAccountRequest;
 import com.example.demo.api.user_account.dto.UserAccountResponse;
+import com.example.demo.api.user_account.dto.WriteRequest;
 import com.example.demo.api.user_account.service.UserAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -35,9 +37,9 @@ public class UserAccountController {
     }
 
     //로그인 시에 jwt 토큰을 발급해주어야 한다.
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<Result> login(@RequestBody LoginRequest loginRequest){
-
+        System.out.println("call - > /login");
         return ResponseEntity.status(200).body(
                 Result.builder()
                         .message("로그인 성공")
@@ -45,9 +47,9 @@ public class UserAccountController {
                         .build()
         );
     }
-    //일반 사용자만 이용 가능
-    //ROLE_USER만 이용 가능
-    @GetMapping("list")
+    //GUEST 이용가능
+
+    @GetMapping("/list")
     public ResponseEntity<Result> list(){
         List<UserAccountResponse> ulist = userAccountService.show();
 
@@ -55,6 +57,18 @@ public class UserAccountController {
                 Result.builder()
                         .message("message")
                         .data(ulist)
+                        .build()
+        );
+    }
+
+    //ROLE_USER만 이용 가능
+    @PostMapping ("/write")
+    public ResponseEntity<Result> write(@RequestBody WriteRequest writeRequest){
+
+        return ResponseEntity.status(200).body(
+                Result.builder()
+                        .message("message")
+                        .data("success writing")
                         .build()
         );
     }

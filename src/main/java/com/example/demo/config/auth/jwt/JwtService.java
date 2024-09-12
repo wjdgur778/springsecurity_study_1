@@ -22,7 +22,7 @@ public class JwtService {
     // 암호화 키 generator 사이트를 통해 키를 생성해서 가져온다.
     // application-properties에 등록해서 사용하면 좋다.
 
-    private static final String SECRET_KEY = "MtSCoZe73qdzicfTSKdlgwTT8I5Lkn5S";
+    private static final String SECRET_KEY = "eab9b35e9fbb63ab41be29a22767ee186ff2ca319fa6c9657f02e025de6b3e95";
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);

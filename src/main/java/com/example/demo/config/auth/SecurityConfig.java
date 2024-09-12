@@ -5,7 +5,9 @@ import com.example.demo.config.auth.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -60,7 +62,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                 authorize -> authorize
                         //requsetMatchers를 사용할때는 url를 정확하게 작성해야한다.
-                        .requestMatchers("/api/v1/user/signup").permitAll()
+                        .requestMatchers("/api/v1/user/write").hasRole("UESR")
+                        .requestMatchers("/api/v1/user/list").authenticated()
                         .anyRequest().hasRole(Role.USER.name())//위에서 언급한 url 이외의 url은 모두 허용한다.
         );
 
@@ -89,4 +92,12 @@ public class SecurityConfig {
         return provider;
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        provider.setUserDetailsService(customUserDetailService);
+
+        return new ProviderManager(provider);
+    }
 }

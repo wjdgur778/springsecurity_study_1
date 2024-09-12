@@ -17,6 +17,7 @@
   * HMAC-SHA algorithms 을 사용 
     * ```Keys.hmacShaKeyFor()```
   * 포워딩 등으로 동일한 요청에 한번만 filter를 거치게 하기위해 ```OnceperRequestFilter```를 상속해 JwtFilter를 생성
+    
 #### 인증과정 I
 1. 사용자의 요청이 들어오면 DispatcherServlet 이전에 SecurityFilter 작동
 2. SecurityFilter 의 설정에 따라 사용자가 요청한 url에 인증 및 인가가 필요한지 확인

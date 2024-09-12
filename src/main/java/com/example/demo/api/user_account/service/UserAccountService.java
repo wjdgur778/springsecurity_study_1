@@ -10,6 +10,8 @@ import com.example.demo.api.user_account.repository.UserAccountRepository;
 import com.example.demo.config.auth.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -31,13 +33,12 @@ public class UserAccountService {
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final DaoAuthenticationProvider daoAuthenticationProvider;
+    private final AuthenticationManager authenticationManager;
 
     @Transactional
     public String signup(UserAccountRequest userAccountRequest) {
         //존재하는 이메일인지 확인
         //존재한다면 exception을 일으킨다.
-
         //builder 패턴을 통해 가독성을 높인다.
         UserAccount user = UserAccount.builder()
                 .email(userAccountRequest.getUserEmail())
@@ -45,18 +46,36 @@ public class UserAccountService {
                 .name(userAccountRequest.getUserName())
                 .userRole(Role.GUEST)
                 .build();
-
         userAccountRepository.save(user);
-        String jwtToken = jwtService.generateToken(user.getEmail());
-        return jwtToken;
+
+        Authentication authentication;
+
+        try{
+            // 사용자 인증 시도
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(userAccountRequest.getUserEmail(),userAccountRequest.getPassword()));
+        }
+        catch (AuthenticationException e){
+            return null;
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        String jwt = jwtService.generateToken(userDetails.getUsername());
+
+
+        return jwt;
     }
 
     @Transactional
     public String login(LoginRequest loginRequest) {
         Authentication authentication;
         try{
+            System.out.println("call - > login in service");
             // 사용자 인증 시도
-            authentication = daoAuthenticationProvider.authenticate(
+            authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUserEmail(),loginRequest.getPassword()));
         }
         catch (AuthenticationException e){
@@ -79,5 +98,6 @@ public class UserAccountService {
                 userAccount -> new UserAccountResponse(userAccount)
         ).collect(Collectors.toList());
     }
+
 
 }

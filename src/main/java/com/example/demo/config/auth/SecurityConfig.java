@@ -62,6 +62,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                 authorize -> authorize
                         //requsetMatchers를 사용할때는 url를 정확하게 작성해야한다.
+                        .requestMatchers("/api/v1/user/login","/api/v1/user/signup").permitAll()
                         .requestMatchers("/api/v1/user/write").hasRole("UESR")
                         .requestMatchers("/api/v1/user/list").authenticated()
                         .anyRequest().hasRole(Role.USER.name())//위에서 언급한 url 이외의 url은 모두 허용한다.
@@ -93,11 +94,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-        provider.setUserDetailsService(customUserDetailService);
-
+    public AuthenticationManager authenticationManager(AuthenticationProvider provider) {
         return new ProviderManager(provider);
     }
 }

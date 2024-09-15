@@ -48,7 +48,6 @@ public class UserAccountController {
         );
     }
     //GUEST 이용가능
-
     @GetMapping("/list")
     public ResponseEntity<Result> list(){
         List<UserAccountResponse> ulist = userAccountService.show();
@@ -64,6 +63,18 @@ public class UserAccountController {
     //ROLE_USER만 이용 가능
     @PostMapping ("/write")
     public ResponseEntity<Result> write(@RequestBody WriteRequest writeRequest){
+
+        return ResponseEntity.status(200).body(
+                Result.builder()
+                        .message("message")
+                        .data("success writing")
+                        .build()
+        );
+    }
+
+
+    @GetMapping ("/change")
+    public ResponseEntity<Result> change(){
 
         return ResponseEntity.status(200).body(
                 Result.builder()

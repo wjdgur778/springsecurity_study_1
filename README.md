@@ -4,6 +4,21 @@
 
 공부 기술 : SpringSecurity, JWT
 
+#### 일반적인 인증과정
+
+1. 클라이언트의 로그인 시도
+2. **AuthenticationFilter** 동작
+   1. **ServletFilter**에 의해 **SecurityFilter**로 작업위임
+   2. **SecurityFilter**중 **UsernamePasswordAuthenticationFilter**가 인증처리
+3. **UsernameAuthenticationToken** 발급
+4. **AuthenticationManager**에 인증 객체 전달
+5. **AuthenticationManager**는 **AuthenticationProvider**에게 인증객체 전달
+6. **AuthenticationProvider**는 **UserDetailService**에 인증객체전달
+7. **UserDetailService**에서 **UserDetails**객체 반환 (```loadUserByUsername()```동작)
+8. 객체를 **AuthenticationProvider** 검증하고 인증에 성공하면 **AuthenticationManager**에 권한을 담은 객체 전달
+9. **AuthenticationManager**가 **AuthenticationFilter**에 전달
+10. 인증된 객체를 **SecurityContextHolder**에 저장
+
 #### 시나리오
 * 사용자가 회원가입과 로그인을 하는 과정을 담고 있다.
 
@@ -39,7 +54,7 @@
       * ```SecurityContextHolder.getContext().setAuthentication(authToken)``` 를 통해 SecurityContextHolder 에 인증 정보를 설정하여 이후의 요청 처리가 인증된 사용자로서 진행.
    2. **JWT가 없거나 유효하지 않음**
       * ```인증과정 I```를 거치고 인증에 성공하면 jwt를 발급받는다.  
-       
+      
 #### 주의한 점
 * 생략되는 과정을 최대한 생각하고 구현 
   * ex) ```SecurityConfig```클래스에 ```AuthenticationProvider``` 를 @Bean으로 등록하면, Spring Security는 이를 자동으로 감지하고 AuthenticationManager를 구성하여 인증 작업을 수행.

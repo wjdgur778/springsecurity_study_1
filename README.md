@@ -58,12 +58,10 @@
 #### 주의한 점
 * 생략되는 과정을 최대한 생각하고 구현 
   * ex) ```SecurityConfig```클래스에 ```AuthenticationProvider``` 를 @Bean으로 등록하면, Spring Security는 이를 자동으로 감지하고 AuthenticationManager를 구성하여 인증 작업을 수행.
-* 인증을 하는 과정에서 사용자의 요청파라미터에 ```username``` 이 없으면 ```UsernamePasswordAuthenticationFilter```가 사용자의 정보를 가져오지 못한다. 
+* (form 기반)인증을 하는 과정에서 사용자의 요청파라미터에 ```username``` 이 없으면 ```UsernamePasswordAuthenticationFilter```가 사용자의 정보를 가져오지 못한다. 
   * JwtFilter에서 먼저 사용자 인증을 거치기 위해 ```http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);```를 사용
 * 로그인을 할 때에는 jwt를 생성 
 * ```/login```으로의 요청은 ```.permit()```을 허용해야한다.
 
+## @Query와 QueryDsl 비교 (추가)
 
-
-
-Postman으로 테스트를 진행했으며 이후 테스트코드를 작성할 예정

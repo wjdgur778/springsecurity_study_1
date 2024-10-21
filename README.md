@@ -66,15 +66,14 @@
 
 ## QueryDsl로 대체(사용)해보기 (추가)
 1. 의존성 추가
-```java
-   //springboot 3.x버전 query dsl 의존성 추가
-   implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
-   annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-   annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-   annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-```
-위 코드를 통해 QueryDsl 의존성을 추가해준다.
-springboot 3.x로 넘어오면서 QueryDsl 의존성 추가 설정이 바뀌었다.
+    ```java
+       //springboot 3.x버전 query dsl 의존성 추가
+       implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
+       annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+       annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+       annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    ```
+    위 코드를 통해 QueryDsl 의존성을 추가해준다. springboot 3.x로 넘어오면서 QueryDsl 의존성 추가 설정이 바뀌었다. 
 2. 코드 추가
     1. ```QueryDSLConfig```클래스를 통해 ```jpaQeuryFactory```를 빈 등록
     2. ```UserAccountRepoImpl```클래스를 통해 쿼리 작성

@@ -6,6 +6,7 @@ import com.example.demo.api.user_account.dto.UserAccountRequest;
 import com.example.demo.api.user_account.dto.UserAccountResponse;
 import com.example.demo.api.user_account.entity.Role;
 import com.example.demo.api.user_account.entity.UserAccount;
+import com.example.demo.api.user_account.repository.UserAccountRepoImpl;
 import com.example.demo.api.user_account.repository.UserAccountRepository;
 import com.example.demo.config.auth.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class UserAccountService {
 
     private final UserAccountRepository userAccountRepository;
+    private final UserAccountRepoImpl userAccountRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -99,5 +101,10 @@ public class UserAccountService {
         ).collect(Collectors.toList());
     }
 
-
+    @Transactional
+    public List<UserAccountResponse> getUser(String email) {
+        return userAccountRepo.findByEmail(email).stream().map(
+                user-> new UserAccountResponse(user)
+        ).collect(Collectors.toList());
+    }
 }

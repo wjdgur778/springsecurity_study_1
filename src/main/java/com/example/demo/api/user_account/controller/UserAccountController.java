@@ -60,6 +60,19 @@ public class UserAccountController {
         );
     }
 
+    //GUEST 이용가능
+    @GetMapping("/{email}")
+    public ResponseEntity<Result> getUser(@PathVariable("email") String email){
+        List<UserAccountResponse> ulist = userAccountService.getUser(email);
+
+        return ResponseEntity.status(200).body(
+                Result.builder()
+                        .message("message")
+                        .data(ulist)
+                        .build()
+        );
+    }
+
     //ROLE_USER만 이용 가능
     @PostMapping ("/write")
     public ResponseEntity<Result> write(@RequestBody WriteRequest writeRequest){

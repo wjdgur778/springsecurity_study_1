@@ -63,5 +63,36 @@
 * 로그인을 할 때에는 jwt를 생성 
 * ```/login```으로의 요청은 ```.permit()```을 허용해야한다.
 
-## @Query와 QueryDsl 비교 (추가)
+## QueryDsl로 대체(사용)해보기 (추가)
+1. 의존성 추가
+```aidl
+	//springboot 3.x버전 query dsl 의존성 추가
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+```
+위 코드를 통해 QueryDsl 의존성을 추가해준다. 
+springboot 3.x로 넘어오면서 QueryDsl 의존성 추가 설정이 바뀌었다.
+2. 코드 추가
+    1. ```QueryDSLConfig```클래스를 통해 ```jpaQeuryFactory```를 빈 등록
+    2. ```UserAccountRepoImpl```클래스를 통해 쿼리 작성
+    ```java
+   public List<UserAccount> findByEmail(String email) {
 
+        QUserAccount qUserAccount = QUserAccount.userAccount;
+        return queryFactory.selectFrom(qUserAccount)
+                .where(qUserAccount.email.eq(email))
+                .fetch();
+   }
+   ``` 
+   생성된 Q클래스를 통해 쿼리를 작성
+
+### 느낀점 및 결론
+* 가장 큰 장점은 문자열로 쿼리를 작성하는 것이 아닌, 타입을 기반으로 쿼리를 작성함으로써 컴파일 시점에 오류를 검출할 수 있다는 것이다.
+* 기존의 프로젝트에 추가하고자 한다면 IDE, springboot, 빌드도구의 버전에 따라 설정이 모두 다르기 때문에 주의 해야할 것같다.
+* QueryDSL은 2021년 5.0.0 버전 이후 새로 릴리즈되고 있지 않아 도입에 대한 의문이 생길 수 있다.
+  * "김영한"님의 말씀에 따르면 "JPA 기술의 경우 이미 성숙 단계에 돌입해서 거의 스펙 추가가 이루어 지지 않고 있습니다. 특히 JPQL 부분은 거의 변하지 않고 있습니다.
+  아마도 앞으로 시간이 많이 흘러도 JPA 스펙에서 JPQL 부분은 거의 변하지 않을 것 같아요. 따라서 Querydsl 5.0을 사용해도 실무에 크게 문제가 되는 부분은 없습니다."
+  * 아직까지는 JPQL을 편리하게 사용할 수 있는 가장 좋은 방법이다.
+* 충분히 깊게 공부하고 고민해 볼 만한 기술이라고 생각된다.

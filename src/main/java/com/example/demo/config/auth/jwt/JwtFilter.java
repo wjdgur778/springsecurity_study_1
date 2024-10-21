@@ -32,6 +32,10 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+
+        //그냥 지나치기
+        filterChain.doFilter(request,response);
+
         // 헤더에 토큰을 포함하고 있지 않으면 다음 필터로 넘기자
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);

@@ -80,14 +80,13 @@ springboot 3.x로 넘어오면서 QueryDsl 의존성 추가 설정이 바뀌었�
     2. ```UserAccountRepoImpl```클래스를 통해 쿼리 작성
     ```java
    public List<UserAccount> findByEmail(String email) {
-
+        // 생성된 Q클래스를 통해 쿼리를 작성
         QUserAccount qUserAccount = QUserAccount.userAccount;
         return queryFactory.selectFrom(qUserAccount)
                 .where(qUserAccount.email.eq(email))
                 .fetch();
    }
-   ```
-   생성된 Q클래스를 통해 쿼리를 작성
+   ``` 
 
 ### 느낀점 및 결론
 

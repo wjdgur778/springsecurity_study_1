@@ -6,12 +6,14 @@ import com.example.demo.api.user_account.dto.UserAccountRequest;
 import com.example.demo.api.user_account.dto.UserAccountResponse;
 import com.example.demo.api.user_account.dto.WriteRequest;
 import com.example.demo.api.user_account.service.UserAccountService;
+import com.example.demo.config.auth.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,9 +49,12 @@ public class UserAccountController {
                         .build()
         );
     }
-    //GUEST 이용가능
+    //유저만 사용가능한 show
     @GetMapping("/list")
     public ResponseEntity<Result> list(){
+        //권한이 필요한 메소드를 호출한 유저의 데이터를 SecurityContext가 가지고 있음을 알 수 있다.
+        CustomUserDetail user = (CustomUserDetail)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(user.getUsername());
         List<UserAccountResponse> ulist = userAccountService.show();
 
         return ResponseEntity.status(200).body(
